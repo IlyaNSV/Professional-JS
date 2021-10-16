@@ -1,44 +1,51 @@
-class ProductList{
-    constructor(container='.products'){
+const API = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
+class ProductList {
+    constructor(container = '.products') {
         this.container = container;
         this.goods = [];
         this.allProducts = [];
-        this._fetchProducts();
+        this.getProducts()
+            .then(data => { 
+                 this.goods = data;
+                 this.render()
+            });
+        // this._fetchProducts();
         this.render();
     }
-    _fetchProducts(){
-        this.goods = [
-            {id: 1, title: 'Notebook', price: 2000},
-            {id: 2, title: 'Mouse', price: 20},
-            {id: 3, title: 'Keyboard', price: 200},
-            {id: 4, title: 'Gamepad', price: 50},
-        ];
+
+    getJSON() {
+
+        return fetch(`${API}/catalogData.json`)
+            .then(result => result.json())
+            .catch(error => {
+                console.log(error);
+            })
     }
-    
-    render(){
+   
+    render() {
         const block = document.querySelector(this.container);
-        for(let product of this.goods){
+        for (let product of this.goods) {
             const item = new ProductItem(product);
             this.allProducts.push(item)
-            block.insertAdjacentHTML("beforeend",item.render());
+            block.insertAdjacentHTML("beforeend", item.render());
         }
     }
 
     countSum() {
         let res_sum = this.allProducts.reduce((s, item) => s + item.price, 0);
-        return console.log(res_sum) 
+        return console.log(res_sum)
     }
 }
 
-class ProductItem{
-    constructor(product,img='https://imgholder.ru/200x200/8491a8/adb9ca&text=NO+PRODUCT+IMAGE&font=kelson&fz=25'){
-        this.title = product.title;
-        this.id = product.id;
+class ProductItem {
+    constructor(product, img = 'https://imgholder.ru/200x200/8491a8/adb9ca&text=NO+PRODUCT+IMAGE&font=kelson&fz=25') {
+        this.title = product.product_name;
+        this.id = product.id_product;
         this.price = product.price;
         this.img = img;
     }
-    render(){
-            return `<div class="product-item card-body text-center mx-1">
+    render() {
+        return `<div class="product-item card-body text-center mx-1">
                 <img src = ${this.img}/>
                 <h3 card-title>${this.title}</h3>
                 <p>${this.price}</p>
@@ -50,15 +57,15 @@ class ProductItem{
 let list = new ProductList();
 list.countSum();
 
-class Basket{
-    addGoods(){};
-    removeGoods(){};
-    changeGoods(){};
-    render(){};
+class Basket {
+    addGoods() { };
+    removeGoods() { };
+    changeGoods() { };
+    render() { };
 }
 
-class ElemBasket{
-    render(){};
+class ElemBasket {
+    render() { };
 }
 
 
